@@ -1,0 +1,25 @@
+export RESOURCE_GROUP=mslearn-messaging
+export STORAGE_ACCOUNT_NAME=mslearnazuremessaging
+
+az storage account create \
+ --name $STORAGE_ACCOUNT_NAME \
+ --resource-group $RESOURCE_GROUP \
+ --kind StorageV2 
+ --sku Standard_LRS
+ 
+az storage account keys list \
+ --account-name $STORAGE_ACCOUNT_NAME \
+ --resource-group $RESOURCE_GROUP
+ 
+az storage account show-connection-string \
+ --name $STORAGE_ACCOUNT_NAME \
+ --resource-group $RESOURCE_GROUP
+ 
+az storage message peek \
+ --queue-name newsqueue \
+ --connection-string "DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=...;AccountKey=...=="
+ 
+az storage queue delete \
+ --name newsqueue \
+ --connection-string "DefaultEndpointsProtocol=https;EndpointSuffix=core.windows.net;AccountName=...;AccountKey=...=="
+ 
