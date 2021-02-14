@@ -10,7 +10,7 @@ namespace performancemessagesender
     {
         const string ServiceBusConnectionString = "";
         const string TopicName = "salesperformancemessages";
-        static ITopicClient topicClient;
+        static ITopicClient _topicClient;
 
         static void Main(string[] args)
         {
@@ -25,7 +25,7 @@ namespace performancemessagesender
 
         static async Task SendPerformanceMessageAsync()
         {
-            topicClient = new TopicClient(ServiceBusConnectionString, TopicName);
+            _topicClient = new TopicClient(ServiceBusConnectionString, TopicName);
 
             // Send messages.
             try
@@ -37,7 +37,7 @@ namespace performancemessagesender
                 Console.WriteLine($"Sending message: {messageBody}");
 
                 // Send the message to the queue.
-                await topicClient.SendAsync(message);
+                await _topicClient.SendAsync(message);
 
             }
             catch (Exception exception)
@@ -45,7 +45,7 @@ namespace performancemessagesender
                 Console.WriteLine($"{DateTime.Now} :: Exception: {exception.Message}");
             }
 
-            await topicClient.CloseAsync();
+            await _topicClient.CloseAsync();
         }
     }
 }

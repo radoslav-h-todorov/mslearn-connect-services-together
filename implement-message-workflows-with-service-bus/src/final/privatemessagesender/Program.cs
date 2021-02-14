@@ -10,7 +10,7 @@ namespace privatemessagesender
     {
         const string ServiceBusConnectionString = "";
         const string QueueName = "salesmessages";
-        static IQueueClient queueClient;
+        static IQueueClient _queueClient;
 
         static void Main(string[] args)
         {
@@ -23,7 +23,7 @@ namespace privatemessagesender
 
         static async Task SendSalesMessageAsync()
         {
-            queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
+            _queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
 
             // Send messages.
             try
@@ -35,7 +35,7 @@ namespace privatemessagesender
                 Console.WriteLine($"Sending message: {messageBody}");
 
                 // Send the message to the queue.
-                await queueClient.SendAsync(message);
+                await _queueClient.SendAsync(message);
 
             }
             catch (Exception exception)
@@ -43,7 +43,7 @@ namespace privatemessagesender
                 Console.WriteLine($"{DateTime.Now} :: Exception: {exception.Message}");
             }
 
-            await queueClient.CloseAsync();
+            await _queueClient.CloseAsync();
         }
     }
 }

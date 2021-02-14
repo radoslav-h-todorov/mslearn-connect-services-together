@@ -11,7 +11,7 @@ namespace performancemessagereceiver
         const string ServiceBusConnectionString = "";
         const string TopicName = "salesperformancemessages";
         const string SubscriptionName = "Americas";
-        static ISubscriptionClient subscriptionClient;
+        static ISubscriptionClient _subscriptionClient;
 
         static void Main(string[] args)
         {
@@ -20,7 +20,7 @@ namespace performancemessagereceiver
 
         static async Task MainAsync()
         {
-            subscriptionClient = new SubscriptionClient(ServiceBusConnectionString, TopicName, SubscriptionName);
+            _subscriptionClient = new SubscriptionClient(ServiceBusConnectionString, TopicName, SubscriptionName);
 
             Console.WriteLine("======================================================");
             Console.WriteLine("Press ENTER key to exit after receiving all the messages.");
@@ -31,7 +31,7 @@ namespace performancemessagereceiver
 
             Console.Read();
 
-            await subscriptionClient.CloseAsync();
+            await _subscriptionClient.CloseAsync();
         }
 
         static void RegisterMessageHandler()
@@ -44,7 +44,7 @@ namespace performancemessagereceiver
             };
 
             // Register the function that processes messages.
-            subscriptionClient.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
+            _subscriptionClient.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
         }
 
         static async Task ProcessMessagesAsync(Message message, CancellationToken token)
@@ -52,7 +52,7 @@ namespace performancemessagereceiver
             // Display the message.
             Console.WriteLine($"Received sale performance message: SequenceNumber:{message.SystemProperties.SequenceNumber} Body:{Encoding.UTF8.GetString(message.Body)}");
 
-            await subscriptionClient.CompleteAsync(message.SystemProperties.LockToken);
+            await _subscriptionClient.CompleteAsync(message.SystemProperties.LockToken);
         }
 
         static Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)

@@ -10,7 +10,7 @@ namespace privatemessagereceiver
     {
         const string ServiceBusConnectionString = "";
         const string QueueName = "salesmessages";
-        static IQueueClient queueClient;
+        static IQueueClient _queueClient;
 
         static void Main(string[] args)
         {
@@ -22,7 +22,7 @@ namespace privatemessagereceiver
         static async Task ReceiveSalesMessageAsync()
         {
 
-            queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
+            _queueClient = new QueueClient(ServiceBusConnectionString, QueueName);
 
             Console.WriteLine("======================================================");
             Console.WriteLine("Press ENTER key to exit after receiving all the messages.");
@@ -32,7 +32,7 @@ namespace privatemessagereceiver
         
             Console.Read();
 
-            await queueClient.CloseAsync();
+            await _queueClient.CloseAsync();
 
         }
 
@@ -51,7 +51,7 @@ namespace privatemessagereceiver
             };
 
             // Register the message handler function
-            queueClient.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
+            _queueClient.RegisterMessageHandler(ProcessMessagesAsync, messageHandlerOptions);
 
         }
 
@@ -62,7 +62,7 @@ namespace privatemessagereceiver
 
             // Complete the message so that it is not received again.
             // This can be done only if the queue Client is created in ReceiveMode.PeekLock mode (which is the default).
-            await queueClient.CompleteAsync(message.SystemProperties.LockToken);
+            await _queueClient.CompleteAsync(message.SystemProperties.LockToken);
         }
 
         static Task ExceptionReceivedHandler(ExceptionReceivedEventArgs exceptionReceivedEventArgs)

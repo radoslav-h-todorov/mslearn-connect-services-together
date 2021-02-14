@@ -1,0 +1,22 @@
+export RESOURCE_GROUP=mslearn-messaging
+export SERVICE_BUS_NAME=salesteamapp
+
+az servicebus namespace authorization-rule keys list \
+    --resource-group $RESOURCE_GROUP \
+    --namespace-name $SERVICE_BUS_NAME \
+    --name RootManageSharedAccessKey \
+    --query primaryConnectionString \
+    --output tsv
+
+az servicebus queue show \
+    --resource-group $RESOURCE_GROUP \
+    --namespace-name $SERVICE_BUS_NAME \
+    --name salesmessages \
+    --query messageCount 
+
+  az servicebus topic subscription show \
+  --resource-group $RESOURCE_GROUP \
+  --namespace-name $SERVICE_BUS_NAME \
+  --topic-name salesperformancemessages \
+  --name Americas \
+  --query messageCount
